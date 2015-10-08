@@ -1,3 +1,3 @@
 package config
 
-import _ "github.com/mpobrien/perf"
+import _ "github.com/10gen/evg-perf"
