@@ -144,7 +144,7 @@ function PerfController($scope, $window, $http, $location){
   }
 
   $scope.percentDiff = function(val1, val2){
-    return (val1 - val2)/val1;
+    return (val1 - val2)/val2;
   }
 
   $scope.getPctDiff = function(referenceOps, sample, testKey){
