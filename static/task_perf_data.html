@@ -153,7 +153,7 @@
         </div>
       </div>
       <div><a href="/plugin/json/task/[[task.id]]/perf/">Raw data</a>&nbsp;<i class="icon-download"></i></div>
-      <div><a ng-show="task.r=='gitter_request'" href="/plugin/json/history/[[task.id]]/perf">Historical data</a>&nbsp;<i class="icon-download"></i></div>
+      <div><a href="/plugin/json/history/[[task.id]]/perf">Historical data</a>&nbsp;<i class="icon-download"></i></div>
     </div>
     <div ng-show="comparePerfSamples.length > 0">
       <span>Comparing to:&nbsp;&nbsp;</span>
@@ -189,8 +189,8 @@
     <ul class="nav nav-tabs">
       <li ng-class="{active:perftab==0}"><a href="#" ng-click="perftab=0; syncHash(0)">Graph</a></li>
       <li ng-class="{active:perftab==1}"><a href="#" ng-click="perftab=1; syncHash(1)">Table</a></li>
-      <li ng-class="{active:perftab==2}" ng-show="task.r=='gitter_request'"><a href="#" ng-click="perftab=2; syncHash(2)">Trend</a></li>
-      <li ng-class="{active:perftab==3}" ng-show="task.r=='gitter_request'"><a href="#" ng-click="perftab=3; syncHash(3)">Trend Table</a></li>
+      <li ng-class="{active:perftab==2}"><a href="#" ng-click="perftab=2; syncHash(2)">Trend</a></li>
+      <li ng-class="{active:perftab==3}"><a href="#" ng-click="perftab=3; syncHash(3)">Trend Table</a></li>
     </ul>
     <div class="compare-about" ng-show="!!comparePerfSample">
       <br/>
