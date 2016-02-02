@@ -8,6 +8,7 @@ import (
 	"html/template"
 	"io/ioutil"
 	"net/http"
+	"path/filepath"
 )
 
 func init() {
@@ -41,14 +42,12 @@ func (pp *PerfPlugin) Configure(params map[string]interface{}) error {
 }
 
 func (pp *PerfPlugin) GetPanelConfig() (*plugin.PanelConfig, error) {
-	root := plugin.StaticWebRootFromSourceFile()
-	panelHTML, err := ioutil.ReadFile(root + "/task_perf_data.html")
+	panelHTML, err := ioutil.ReadFile(filepath.Join(plugin.TemplateRoot(pp.Name()), "task_perf_data.html"))
 	if err != nil {
 		return nil, fmt.Errorf("Can't load panel html file: %v", err)
 	}
 
 	return &plugin.PanelConfig{
-		StaticRoot: plugin.StaticWebRootFromSourceFile(),
 		Panels: []plugin.UIPanel{
 			{
 				Includes:  includes,
