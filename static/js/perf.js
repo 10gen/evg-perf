@@ -19,7 +19,8 @@ function average (arr){
 }
 
 
-function PerfController($scope, $window, $http, $location){
+
+mciModule.controller('PerfController', function PerfController($scope, $window, $http, $location){
     /* for debugging
     $sce, $compile){
 
@@ -432,7 +433,7 @@ function PerfController($scope, $window, $http, $location){
       $scope.addComparisonHash($scope.task.patch_info.Patch.Githash);
     }
   }
-}
+})
 
 // Class to contain a collection of samples in a series.
 function TrendSamples(samples){
