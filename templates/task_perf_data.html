@@ -144,21 +144,21 @@
   </style>
   <div class="panel perf-panel" ng-if="conf.enabled && !!perfSample">
     <div class="pull-right text-right">
-      <div ng-show="!!perfTagData.tag"><i class="icon-tag"></i>&nbsp;Tagged as&nbsp;<div class="label label-primary">[[perfTagData.tag]]</div><i class="icon-remove" ng-click="deleteTag()"></i></div>
+      <div ng-show="!!perfTagData.tag"><i class="fa fa-tag"></i>&nbsp;Tagged as&nbsp;<div class="label label-primary">[[perfTagData.tag]]</div><i class="fa fa-times" ng-click="deleteTag()"></i></div>
       <div ng-show="!perfTagData.tag">
         <a href="" ng-show="!showTagForm" ng-click="showTagForm=true">Tag this data&hellip;</a>
         <div ng-show="showTagForm">
           <input type="text" ng-model="perfTagData.input" ng-keypress="setTaskTag($event)"/>
-          <i class="icon-remove" ng-click="showTagForm=false"></i>
+          <i class="fa fa-times" ng-click="showTagForm=false"></i>
         </div>
       </div>
-      <div><a href="/plugin/json/task/[[task.id]]/perf/">Raw data</a>&nbsp;<i class="icon-download"></i></div>
-      <div><a href="/plugin/json/history/[[task.id]]/perf">Historical data</a>&nbsp;<i class="icon-download"></i></div>
+      <div><a href="/plugin/json/task/[[task.id]]/perf/">Raw data</a>&nbsp;<i class="fa fa-download"></i></div>
+      <div><a href="/plugin/json/history/[[task.id]]/perf">Historical data</a>&nbsp;<i class="fa fa-download"></i></div>
     </div>
     <div ng-show="comparePerfSamples.length > 0">
       <span>Comparing to:&nbsp;&nbsp;</span>
       <ul class="compare-list">
-        <li class="label label-primary compare-label" ng-repeat="item in comparePerfSamples"> <i class="icon-remove compare-remove" ng-click="removeCompareItem($index)"></i> <a href="/task/[[item.sample.task_id]]" class="compare-link">[[item.getLegendName()]]</a> </li>&nbsp;
+        <li class="label label-primary compare-label" ng-repeat="item in comparePerfSamples"> <i class="fa fa-times compare-remove" ng-click="removeCompareItem($index)"></i> <a href="/task/[[item.sample.task_id]]" class="compare-link">[[item.getLegendName()]]</a> </li>&nbsp;
       </ul>
     </div>
     <a ng-click="showingCompareForm = true" href="" ng-show="!showingCompareForm">Add comparison...</a>
@@ -231,7 +231,7 @@
     <div ng-show="perftab==2">
       <div class="muted" ng-show="!locked">click on a graph to lock to a commit</div>
       <div class="perf-trendchart-wrapper" ng-repeat="k in perfSample.testNames()">
-        <h4> <i ng-class="isGraphHidden(k) ? 'icon-expand' : 'icon-collapse'" ng-click="toggleGraph(k)"></i>&nbsp;[[k]]</h4>
+        <h4> <i class="fa" ng-class="isGraphHidden(k) ? 'fa-caret-right' : 'fa-caret-down'" ng-click="toggleGraph(k)"></i>&nbsp;[[k]]</h4>
         <div class="row" ng-show="!isGraphHidden(k)">
           <div class="col-lg-1">
             <div>
