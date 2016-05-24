@@ -612,15 +612,15 @@ var drawTrendGraph = function(trendSamples, tests, scope, taskId, compareSamples
     var seriesMax = d3.max(ops)
     var seriesAvg = d3.mean(ops)
 
-    // If the upper and lower y-axis values are very close to the average
-    // (within 10%) add extra padding to the upper and lower bounds of the graph for display
-    var yAxisUpperBound = d3.max([compareMax, seriesMax, seriesAvg*1.1])
-    var yAxisLowerBound = d3.min([d3.min(ops), seriesAvg*.9])
-
     var compareMax = 0
     if(compareSamples){
         compareMax = d3.max(_.map(compareSamples, function(x){return x.maxThroughputForTest(key)}))
     }
+
+    // If the upper and lower y-axis values are very close to the average
+    // (within 10%) add extra padding to the upper and lower bounds of the graph for display
+    var yAxisUpperBound = d3.max([compareMax, seriesMax, seriesAvg*1.1])
+    var yAxisLowerBound = d3.min([d3.min(ops), seriesAvg*.9])
 
     // create extra padding if seriesMax
 
