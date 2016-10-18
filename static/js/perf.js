@@ -145,7 +145,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
   }
 
   $scope.percentDiff = function(val1, val2){
-    return (val1 - val2)/val2;
+    return (val1 - val2)/Math.abs(val2);
   }
 
   $scope.getPctDiff = function(referenceOps, sample, testKey){
