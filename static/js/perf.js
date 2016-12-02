@@ -72,7 +72,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
       delete hash.compare
     }
     setTimeout(function(){
-      $location.hash(JSON.stringify(hash))
+      $location.hash(encodeURIComponent(JSON.stringify(hash)))
       $scope.$apply()
     },1)
   }
