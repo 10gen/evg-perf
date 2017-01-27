@@ -607,7 +607,7 @@ var drawTrendGraph = function(trendSamples, tests, scope, taskId, compareSamples
     var series = trendSamples.seriesByName[key];
     var ops = _.pluck(series, 'ops_per_sec');
     var opsValues = _.pluck(series, 'ops_per_sec_values');
-    var hasValues = d3.max(opsValues) != undefined
+    var hasValues = !_.contains(opsValues, undefined)
 
     var seriesMax = d3.max(ops)
     var seriesAvg = d3.mean(ops)
@@ -644,7 +644,6 @@ var drawTrendGraph = function(trendSamples, tests, scope, taskId, compareSamples
       .data([series])
       .attr("class", "line")
       .attr("d", line);
-
 
     if(hasValues){
       var maxline = d3.svg.line()
