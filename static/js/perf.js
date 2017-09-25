@@ -92,11 +92,10 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
   }
 
   $scope.deleteTag = function(){
-    $http.delete("/plugin/json/task/" + $scope.task.id + "/perf/tag").success(function(d){
-      delete $scope.perfTagData.tag
-    }).error(function(){
-      console.log("error")
-    })
+    $http.delete("/plugin/json/task/" + $scope.task.id + "/perf/tag").then(
+      function(resp){ delete $scope.perfTagData.tag; },
+      function(){console.log("error")}
+    );
   }
 
   // needed to do Math.abs in the template code.
@@ -104,7 +103,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
   $scope.conf = $window.plugins["perf"];
   $scope.task = $window.task_data;
   $scope.tablemode = "maxthroughput";
-  
+
   // perftab refers to which tab should be selected. 0=graph, 1=table, 2=trend, 3=trend-table
   $scope.perftab = $scope.task.patch_info ? 1 : 2;
   $scope.project = $window.project;
@@ -116,7 +115,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
     if(!!$scope.perfSample){
       var testNames = $scope.perfSample.testNames()
       for(var i=0;i<testNames.length;i++){
-        var s = $scope.trendSamples.sampleInSeriesAtCommit(testNames[i], $scope.currentHash) 
+        var s = $scope.trendSamples.sampleInSeriesAtCommit(testNames[i], $scope.currentHash)
         $scope.hoverSamples[testNames[i]] = s
       }
     }
@@ -241,7 +240,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
           return x(d.threads) + (x1.rangeBand() / 2);
         })
         .y0(function(d) {
-          return y(d3.min(d.ops_per_sec_values))     
+          return y(d3.min(d.ops_per_sec_values))
         })
         .y1(function(d) {
           return y(d3.max(d.ops_per_sec_values))
@@ -326,11 +325,10 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
 
   $scope.setTaskTag = function(keyEvent){
     if (keyEvent.which === 13){
-      $http.post("/plugin/json/task/" + $scope.task.id + "/perf/tag", {tag:$scope.perfTagData.input}).success(function(d){
-        $scope.perfTagData.tag = $scope.perfTagData.input
-      }).error(function(){
-        console.log("error")
-      })
+      $http.post("/plugin/json/task/" + $scope.task.id + "/perf/tag", {tag:$scope.perfTagData.input}).then(
+        function(resp){ $scope.perfTagData.tag = $scope.perfTagData.input},
+        function(){ console.log("error")}
+      );
     }
     return true
   }
@@ -348,23 +346,25 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
     }
     $scope.savedCompares.push(saveObj)
     if(!!commitHash){
-      $http.get("/plugin/json/commit/" + $scope.project + "/" + commitHash + "/" + $scope.task.build_variant + "/" + $scope.task.display_name + "/perf")
-        .success(function(d){
-          var compareSample = new TestSample(d); 
+      $http.get("/plugin/json/commit/" + $scope.project + "/" + commitHash + "/" + $scope.task.build_variant + "/" + $scope.task.display_name + "/perf").then(
+        function(resp){
+          var d = resp.data;
+          var compareSample = new TestSample(d);
           $scope.comparePerfSamples.push(compareSample)
           if(draw)
             $scope.redrawGraphs()
-        })
-        .error(function(e){console.log(e) })
+        },
+        function(resp){console.log(resp.data) });
     }else if(!!formData.tag && formData.tag.length > 0){
-      $http.get("/plugin/json/tag/" + $scope.project + "/" + formData.tag + "/" + $scope.task.build_variant + "/" + $scope.task.display_name + "/perf")
-        .success(function(d){
-          var compareSample = new TestSample(d); 
+      $http.get("/plugin/json/tag/" + $scope.project + "/" + formData.tag + "/" + $scope.task.build_variant + "/" + $scope.task.display_name + "/perf").then(
+        function(resp){
+          var d = resp.data;
+          var compareSample = new TestSample(d);
           $scope.comparePerfSamples.push(compareSample)
           if(draw)
             $scope.redrawGraphs()
-        })
-        .error(function(e){console.log(e) })
+        },
+        function(resp){console.log(resp.data) });
     }
 
     $scope.compareForm = {}
@@ -379,7 +379,7 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
   }
 
   $scope.redrawGraphs = function(){
-      setTimeout(function(){ 
+      setTimeout(function(){
         drawDetailGraph($scope.perfSample, $scope.comparePerfSamples, $scope.task.id);
         drawTrendGraph($scope.trendSamples, $scope.perfSample.testNames(), $scope, $scope.task.id, $scope.comparePerfSamples);
       },0)
@@ -405,8 +405,9 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
       }catch (e){ }
     }
     // Populate the graph and table for this task
-    $http.get("/plugin/json/task/" + $scope.task.id + "/perf/")
-      .success(function(d){
+    $http.get("/plugin/json/task/" + $scope.task.id + "/perf/").then(
+      function(resp){
+        var d = resp.data;
         $scope.perfSample = new TestSample(d);
         var w = 700;
         var bw = 1;
@@ -417,15 +418,18 @@ mciModule.controller('PerfController', function PerfController($scope, $window, 
         setTimeout(function(){drawDetailGraph($scope.perfSample, $scope.comparePerfSamples, $scope.task.id)},0);
 
         // Populate the trend data
-        $http.get("/plugin/json/history/" + $scope.task.id + "/perf")
-          .success(function(d){
+        $http.get("/plugin/json/history/" + $scope.task.id + "/perf").then(
+          function(resp){
+            var d = resp.data;
             $scope.trendSamples = new TrendSamples(d);
             setTimeout(function(){drawTrendGraph($scope.trendSamples, $scope.perfSample.testNames(), $scope, $scope.task.id,  $scope.comparePerfSamples)},0);
-          })
-      })
+          });
+      });
 
-    $http.get("/plugin/json/task/" + $scope.task.id + "/perf/tags").success(function(d){
-      $scope.tags = d.sort(function(a,b){return a.tag.localeCompare(b.tag)})
+    $http.get("/plugin/json/task/" + $scope.task.id + "/perf/tags").then(
+      function(resp){
+        var d = resp.data;
+        $scope.tags = d.sort(function(a,b){return a.tag.localeCompare(b.tag)})
     })
 
     if($scope.task.patch_info && $scope.task.patch_info.Patch.Githash){
@@ -441,7 +445,7 @@ function TrendSamples(samples){
 
   // _sampleByCommitIndexes is a map of mappings of (githash -> sample data), keyed by test name.
   // e.g.
-  // { 
+  // {
   //   "test-foo":  {"ab215e..." : { sample data }, "bced3f..." : { sample data }, ...
   //   "test-blah": {"ab215e..." : { sample data }, "bced3f..." : { sample data }, ...
   //   ..
@@ -497,7 +501,7 @@ function TrendSamples(samples){
 
   this.tasksByCommitOrderByTestName = function(testName){
      if(!(testName in this._tasksByName)){
-        this._tasksByName[testName] = _.sortBy(_.uniq(this.seriesByName[testName], function(x){return x.task_id}), "order") 
+        this._tasksByName[testName] = _.sortBy(_.uniq(this.seriesByName[testName], function(x){return x.task_id}), "order")
      }
      return this._tasksByName[testName]
   }
@@ -728,7 +732,7 @@ var drawTrendGraph = function(trendSamples, tests, scope, taskId, compareSamples
           for(var q=0;q<tests.length;q++){
             var d = scope.d3data[tests[q]]
             var index = findIndex(ts.tasksByCommitOrderByTestName(tests[q]), function(x){return x.revision==hash})
-            var tempSample = ts.sampleInSeriesAtCommit(tests[q], hash) 
+            var tempSample = ts.sampleInSeriesAtCommit(tests[q], hash)
             if(index && tempSample){
               d.focus.attr("cx", d.x(index)).attr("cy", d.y(tempSample.ops_per_sec))
             }else{
